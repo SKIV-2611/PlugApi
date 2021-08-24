@@ -43,16 +43,17 @@ namespace PlugApi.Controllers
 
         // PUT: api/PaymentOrders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPaymentOrder(int id, PaymentOrder paymentOrder)
+        [HttpPut("{id}:")]
+        public async Task<IActionResult> ChangeStatusOfPaymentOrder(int id, PaymentOrderDTO dto)
         {
-            if (id != paymentOrder.Id)
+            if (id != dto.DboId)
             {
                 return BadRequest();
             }
-
+            PaymentOrder paymentOrder = DtoToPaymentOrder(dto);
+            
             _context.Entry(paymentOrder).State = EntityState.Modified;
-
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -103,6 +104,19 @@ namespace PlugApi.Controllers
         private bool PaymentOrderExists(int id)
         {
             return _context.PaymentOrders.Any(e => e.Id == id);
+        }
+
+        private PaymentOrder DtoToPaymentOrder(PaymentOrderDTO dto)
+        {
+            PaymentOrder po = new PaymentOrder
+            {
+                Id = dto.DboId,
+                SenderAccount = dto.PayerAccountNumber,
+                ReceiverAccount = dto.ReceiverAccountNumber,
+                Sum = dto.Amount,
+                Reference = dto.PaymentDetails
+            };
+            return po;
         }
     }
 }
