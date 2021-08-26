@@ -44,18 +44,14 @@ namespace PlugApi.Controllers
         // PUT: api/PaymentOrders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> ChangeStatusOfPaymentOrder(int id, string status, PaymentOrderDTO dto)
+        public async Task<IActionResult> ChangeStatusOfPaymentOrder(int id, string status, string comments)
         {
-            if (id != dto.DboId)
-            {
-                return BadRequest();
-            }
-            PaymentOrder paymentOrder = DtoToPaymentOrder(dto);
-            
+            PaymentOrder paymentOrder = _context.PaymentOrders.Find(id);
             _context.Entry(paymentOrder).State = EntityState.Modified;
             
             try
             {
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
@@ -76,10 +72,29 @@ namespace PlugApi.Controllers
         // POST: api/PaymentOrders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PaymentOrder>> PostPaymentOrder(PaymentOrder paymentOrder)
+        public async Task<ActionResult> PostPaymentOrder(int id, string status, string comments)
         {
-            _context.PaymentOrders.Add(paymentOrder);
-            await _context.SaveChangesAsync();
+
+            PaymentOrder paymentOrder = _context.PaymentOrders.Find(id);
+            _context.Entry(paymentOrder).State = EntityState.Modified;
+
+            try
+            {
+                paymentOrder.Status = (int)Enum.Parse(typeof(ApiOrderStatus), status);
+                paymentOrder.Reference += "_________/n" + comments;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PaymentOrderExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return Ok();
             //return CreatedAtAction("GetPaymentOrder", new { id = paymentOrder.Id }, paymentOrder);

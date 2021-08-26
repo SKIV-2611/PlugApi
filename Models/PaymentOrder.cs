@@ -8,6 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PlugApi.Models
 {
+    enum ApiOrderStatus
+    {
+        Processing = 1,
+        Performed = 2,
+        Refused = 3,
+        NotSent = 4
+    }
     [Table("PaymentOrder")]
     public partial class PaymentOrder
     {
