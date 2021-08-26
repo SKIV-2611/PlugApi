@@ -31,7 +31,7 @@ namespace PlugApi.Controllers
 
         
             paymentOrder.Status = (int)Enum.Parse(typeof(ApiOrderStatus), status);
-            paymentOrder.Reference += "_________/n" + comments;
+            //paymentOrder.Reference += "_________/n" + comments;
             await _context.SaveChangesAsync();
 
             return Ok();
