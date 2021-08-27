@@ -9,7 +9,7 @@ using PlugApi.Models;
 
 namespace PlugApi.Controllers
 {
-    [Route("api/PlugPaymentOrders")]
+    [Route("api/PaymentOrders")]
     [ApiController]
     public class PaymentOrdersController : ControllerBase
     {
@@ -30,7 +30,7 @@ namespace PlugApi.Controllers
             _context.Entry(paymentOrder).State = EntityState.Modified;
 
         
-            paymentOrder.Status = int.Parse(status + "2");//тестовая заглушка
+            paymentOrder.Status = int.Parse((status == null) ? status + "2" : status);//тестовая заглушка
             //paymentOrder.Reference += "_________/n";
             await _context.SaveChangesAsync();
 
