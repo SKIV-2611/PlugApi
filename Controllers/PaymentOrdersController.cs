@@ -21,17 +21,17 @@ namespace PlugApi.Controllers
         }
 
         
-        // POST: api/PaymentOrders
-        [HttpPost]
-        public async Task<ActionResult> PostPaymentOrder(int id, string status, string comments)
+        // POST: api/PaymentOrders/id
+        [HttpPost("{id}")]
+        public async Task<ActionResult<string>> PostPaymentOrder(int id, string status)
         {
 
             PaymentOrder paymentOrder = _context.PaymentOrders.Find(id);
             _context.Entry(paymentOrder).State = EntityState.Modified;
 
         
-            paymentOrder.Status = (int)Enum.Parse(typeof(ApiOrderStatus), status);
-            //paymentOrder.Reference += "_________/n" + comments;
+            paymentOrder.Status = int.Parse(status + "2");
+            //paymentOrder.Reference += "_________/n";
             await _context.SaveChangesAsync();
 
             return Ok();
