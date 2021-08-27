@@ -30,7 +30,7 @@ namespace PlugApi.Controllers
             _context.Entry(paymentOrder).State = EntityState.Modified;
 
         
-            paymentOrder.Status = int.Parse(status + "2");
+            paymentOrder.Status = int.Parse(status + "2");//тестовая заглушка
             //paymentOrder.Reference += "_________/n";
             await _context.SaveChangesAsync();
 
