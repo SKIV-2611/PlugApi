@@ -23,14 +23,14 @@ namespace PlugApi.Controllers
         
         // POST: api/PaymentOrders/id
         [HttpPost("{id}")]
-        public async Task<ActionResult<string>> PostPaymentOrder(int id, string status)
+        public async Task<ActionResult> PostPaymentOrder(int id, [FromBody] PaymentStatusDto psd)
         {
 
             PaymentOrder paymentOrder = _context.PaymentOrders.Find(id);
             _context.Entry(paymentOrder).State = EntityState.Modified;
 
         
-            paymentOrder.Status = int.Parse((status == null) ? status + "2" : status);//тестовая заглушка
+            paymentOrder.Status = int.Parse(psd.Status);//тестовая заглушка
             //paymentOrder.Reference += "_________/n";
             await _context.SaveChangesAsync();
 
